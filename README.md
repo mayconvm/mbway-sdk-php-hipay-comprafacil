@@ -1,1 +1,1 @@
-# hipay-mbway-sdk-php
+# HiPay MB WAY SDK PHP

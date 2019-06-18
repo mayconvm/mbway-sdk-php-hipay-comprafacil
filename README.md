@@ -144,3 +144,43 @@
                 break;
         }
     }
+
+
+
+### Process notification
+
+    use HipayMbway\MbwayNotification;
+    
+    $entityBody = file_get_contents('php://input');
+    $notification = new MbwayNotification($entityBody);
+    if ($notification->get_isJson() === false) {
+        die("Invalid notification received.");
+    }
+    
+    $notification_cart_id = $notification->get_ClientExternalReference();
+    $transactionId = $notification->get_OperationId();
+    $transactionAmount = $notification->get_Amount();
+    $transactionStatusCode = $notification->get_StatusCode();
+    
+    switch ($transactionStatusCode) {
+        case "c1":
+            print "MB WAY payment confirmed for transaction $transactionId." . PHP_EOL;
+            break;
+        case "c3":
+        case "c6":
+        case "vp1":
+            print "Waiting capture notification for transaction $transactionId." . PHP_EOL;
+            break;
+        case "ap1":
+            print "Refunded transaction $transactionId." . PHP_EOL;
+            break;
+        case "c2":
+        case "c4":
+        case "c5":
+        case "c7":
+        case "c8":
+        case "c9":
+        case "vp2":
+            print "MB WAY payment cancelled transaction $transactionId." . PHP_EOL;
+            break;
+    }

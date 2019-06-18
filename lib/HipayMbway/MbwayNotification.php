@@ -16,12 +16,17 @@ class MbwayNotification {
     private $StatusDescription;
     private $StatusDescriptionDetails;
     private $ClientExternalReference;
-    
+    private $isJson;
+            
 	function __construct($response) {
         $responseObj = json_decode($response, false);
-        if (json_last_error() != JSON_ERROR_NONE) {
+        
+        if (is_null($responseObj) || json_last_error() != JSON_ERROR_NONE) {
+            $this->set_isJson(false);
             return false;
         }
+        
+        $this->set_isJson(true);
         $this->set_OperationId($responseObj->OperationId);
         $this->set_Amount($responseObj->Amount);
         $this->set_Phone($responseObj->Phone);
@@ -55,8 +60,14 @@ class MbwayNotification {
     function get_ClientExternalReference() {
         return $this->ClientExternalReference;
     }
+    function get_isJson() {
+        return $this->isJson;
+    }    
     function set_Amount($Amount) {
         $this->Amount = $Amount;
+    }
+    function set_isJson($isJson) {
+        $this->isJson = $isJson;
     }
     function set_OperationId($OperationId) {
         $this->OperationId = $OperationId;
